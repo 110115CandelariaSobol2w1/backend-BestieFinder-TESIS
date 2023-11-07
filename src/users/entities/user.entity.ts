@@ -1,5 +1,8 @@
 import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Animal } from "src/animales/entities/animal.entity";
+import { Turno } from "src/turnos/entities/turno.entity";
+import { UsuariosRefugio } from "src/usuarios_refugios/entities/usuarios_refugio.entity";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('usuarios')
 export class User {
@@ -32,5 +35,17 @@ export class User {
   @IsString()
   @IsOptional()
   photo:string
+
+  @OneToMany(() => Animal, (animal) => animal.user)
+  animal: Animal[];
+
+  @OneToMany(() => UsuariosRefugio, (ur) => ur.usuario)
+  @JoinColumn({ name: 'id' })
+  refugios: UsuariosRefugio[];
+
+  @OneToMany(() => Turno, (turno) => turno.usuario)
+  turnos: Turno[];
+
+
 }
 

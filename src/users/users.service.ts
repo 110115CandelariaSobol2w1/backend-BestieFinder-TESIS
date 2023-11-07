@@ -12,6 +12,14 @@ export class UsersService {
     return this.userRepository.createUser(createUserDto)
   }
 
+  async getUserById(id:number, req){
+    return this.userRepository.getUserById(id, req)
+  }
+
+  async updateUser(updateUserDto: UpdateUserDto, req){
+    return this.userRepository.updateUser(updateUserDto,req)
+  }
+
   findAll() {
     return `This action returns all users`;
   }

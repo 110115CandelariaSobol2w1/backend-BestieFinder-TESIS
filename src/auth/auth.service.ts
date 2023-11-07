@@ -12,6 +12,7 @@ export class AuthService {
         private readonly jwtService: JwtService){}
 
     async register(createUserDto: CreateUserDto){
+        console.log(createUserDto)
         return this.userService.create(createUserDto);
     }
 
@@ -26,7 +27,7 @@ export class AuthService {
         const isPasswordValid = await bcryptjs.compare(password, user.password);
         
         if (!isPasswordValid) {
-            return 'Las contraseñas no coinciden';
+            return { error: 'No existe un usuario con ese correo electrónico' };
         }
         // Si el usuario y la contraseña son válidos, generar un token JWT
         const payload = { userId: user.id, username: user.email };
