@@ -72,6 +72,27 @@ export class animalRepository {
     }
   }
 
+  async getanimalesAdopcion(): Promise<any> {
+    try {
+      const animales = await this.animalRepository.findOne({
+        where: {
+          animal_estado: 4,
+        },
+      });
+      return {
+        message: 'Animales en adopcion',
+        statusCode: HttpStatus.OK,
+        data: animales,
+      };
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: [`${error.message}`],
+        error: 'Error Interno del Servidor',
+      });
+    }
+  }
+
   async updateAnimal(id:number,updateAnimalDto: UpdateAnimaleDto, req) {
     try {
       const { userId } = req.user;

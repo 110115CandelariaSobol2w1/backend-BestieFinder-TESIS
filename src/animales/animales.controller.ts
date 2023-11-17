@@ -19,6 +19,11 @@ export class AnimalesController {
     return this.animalesService.findAll();
   }
 
+  @Get('/adopcion')
+  animalesAdopcion() {
+    return this.animalesService.getanimalesAdopcion();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.animalesService.findOne(id);

@@ -14,9 +14,9 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('id/:id')
-  getUserById(@Param('id') id:number, @Request() req) {
-    return this.usersService.getUserById(id, req);
+  @Get('perfil')
+  getUserById(@Request() req) {
+    return this.usersService.getUserById(req);
   }
 
   @UseGuards(AuthGuard)

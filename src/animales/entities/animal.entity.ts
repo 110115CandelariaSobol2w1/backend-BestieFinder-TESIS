@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBase64, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { AnimalEstado } from 'src/animal_estado/entities/animal_estado.entity';
 import { AnimalTipo } from 'src/animal_tipo/entities/animal_tipo.entity';
 import { Publicacion } from 'src/publicaciones/entities/publicacione.entity';
@@ -44,6 +44,7 @@ export class Animal {
   @Column()
   @IsNotEmpty()
   @IsString()
+  @IsBase64()
   animal_photo:string
 
   @Column()

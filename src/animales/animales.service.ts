@@ -34,4 +34,8 @@ export class AnimalesService {
   async updateAnimalPerdidoEncontrado(id:number, req){
     return await this.animalesRepository.cambiarAnimalPerdidoEncontrado(id,req);
   }
+
+  async getanimalesAdopcion(){
+    return await this.animalesRepository.getanimalesAdopcion();
+  }
 }

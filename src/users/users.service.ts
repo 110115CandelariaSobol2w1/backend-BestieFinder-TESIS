@@ -12,8 +12,8 @@ export class UsersService {
     return this.userRepository.createUser(createUserDto)
   }
 
-  async getUserById(id:number, req){
-    return this.userRepository.getUserById(id, req)
+  async getUserById(req){
+    return this.userRepository.getUserById(req)
   }
 
   async updateUser(updateUserDto: UpdateUserDto, req){

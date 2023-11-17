@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
+import { IsBase64, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 import { Animal } from "src/animales/entities/animal.entity";
 import { Turno } from "src/turnos/entities/turno.entity";
 import { UsuariosRefugio } from "src/usuarios_refugios/entities/usuarios_refugio.entity";
@@ -20,6 +20,11 @@ export class User {
   @IsString()
   apellido:string
 
+  @Column({name: 'user_telefono'})
+  @IsNotEmpty()
+  @IsString()
+  telefono:string
+
   @Column({name: 'user_email', unique:true})
   @IsNotEmpty()
   @IsEmail()
@@ -33,6 +38,7 @@ export class User {
 
   @Column({name: 'user_photo'})
   @IsString()
+  @IsBase64()
   @IsOptional()
   photo:string
 

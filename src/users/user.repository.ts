@@ -51,26 +51,23 @@ export class userRepository {
     return user;
   }
 
-  async getUserById(id: number, req) {
+  async getUserById(req) {
     try {
       const { userId } = req.user;
       console.log(userId);
-      console.log(id);
 
-      if (userId != id) {
-        return 'no puede ver informacion de otro usuario';
-      } else {
         const user = await this.userRepository.findOne({
           where: {
-            id: id,
+            id: userId,
           },
-        });
+        })
+    
         return {
           message: 'Usuario',
           statusCode: HttpStatus.OK,
           data: user,
         };
-      }
+      
     } catch (error) {
       throw new BadRequestException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -96,6 +93,8 @@ export class userRepository {
   
       user.nombre = updateUserDto.nombre;
       user.apellido = updateUserDto.apellido;
+      user.telefono = updateUserDto.telefono;
+      user.photo = updateUserDto.photo;
   
       await this.userRepository.save(user);
   
