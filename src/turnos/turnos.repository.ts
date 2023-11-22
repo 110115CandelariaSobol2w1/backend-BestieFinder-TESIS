@@ -14,7 +14,9 @@ export class turnosRepository {
     private animalRepository: Repository<Animal>
   ) {}
 
-  async nuevoTurno(createTurnoDto: CreateTurnoDto){
+  async nuevoTurno(createTurnoDto: CreateTurnoDto, req){
+
+    const { userId } = req.user;
     //primero obtengo el animal para ver que tipo es
     const obtengoTipo = await this.animalRepository.findOne({
       where: {
@@ -48,7 +50,7 @@ export class turnosRepository {
         const registrandoTurno = this.turnoRepository.create({
           turno_fecha: createTurnoDto.turno_fecha,
           turno_estado: IdEstado,
-          user_id: createTurnoDto.user_id,
+          user_id: userId,
           refugio_id: createTurnoDto.refugio_id,
           turno_fecha_fin: createTurnoDto.turno_fecha_fin
         });
@@ -85,7 +87,7 @@ export class turnosRepository {
         const registrandoTurno = this.turnoRepository.create({
           turno_fecha: createTurnoDto.turno_fecha,
           turno_estado: IdEstado,
-          user_id: createTurnoDto.user_id,
+          user_id: userId,
           refugio_id: createTurnoDto.refugio_id,
           turno_fecha_fin: createTurnoDto.turno_fecha_fin
         });

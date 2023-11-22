@@ -8,8 +8,8 @@ export class TurnosService {
 
   constructor(private readonly turnoRepository: turnosRepository){}
 
-  async create(createTurnoDto: CreateTurnoDto) {
-    return await this.turnoRepository.nuevoTurno(createTurnoDto) ;
+  async create(createTurnoDto: CreateTurnoDto, req) {
+    return await this.turnoRepository.nuevoTurno(createTurnoDto,req) ;
   }
 
   findAll() {

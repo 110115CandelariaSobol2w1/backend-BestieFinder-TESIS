@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards } from '@nestjs/common';
 import { TurnosService } from './turnos.service';
 import { CreateTurnoDto } from './dto/create-turno.dto';
 import { UpdateTurnoDto } from './dto/update-turno.dto';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('turnos')
 export class TurnosController {
   constructor(private readonly turnosService: TurnosService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createTurnoDto: CreateTurnoDto) {
-    return this.turnosService.create(createTurnoDto);
+  create(@Body() createTurnoDto: CreateTurnoDto, @Request() req) {
+    return this.turnosService.create(createTurnoDto, req);
   }
 
   @Get()
