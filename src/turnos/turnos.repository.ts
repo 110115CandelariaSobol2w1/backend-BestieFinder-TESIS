@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { Turno } from "./entities/turno.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { LessThanOrEqual, MoreThan, Repository } from "typeorm";
+import { LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from "typeorm";
 import { Animal } from "src/animales/entities/animal.entity";
 import { CreateTurnoDto } from "./dto/create-turno.dto";
+import { turnosDisponiblesDto } from "./dto/turnos-disponibles.dto";
 
 @Injectable()
 export class turnosRepository {
@@ -101,6 +102,55 @@ export class turnosRepository {
       }
     }
     
+  }
+
+  async getHorariosDisponibles(turnosDisponibles: turnosDisponiblesDto){
+    const obtengoTipo = await this.animalRepository.findOne({
+      where: {
+        animal_id: turnosDisponibles.animal_id
+      }
+    })
+
+    const tipo = obtengoTipo.animal_tipo
+    const duracion = tipo === 2 ? 45 : 30; // duración según el tipo de mascota
+
+    const fechaInicio = new Date(turnosDisponibles.turno_fecha); // convertir la fecha a un objeto Date
+    fechaInicio.setHours(9, 0, 0, 0); // establecer la hora de inicio de la agenda
+    const fechaFin = new Date(turnosDisponibles.turno_fecha);
+    fechaFin.setHours(18, 0, 0, 0); //
+
+    const turnos = await this.turnoRepository.find({
+      where: {
+        turno_fecha: fechaInicio,
+        refugio_id: turnosDisponibles.refugio_id,
+      },
+    });
+
+    const horariosDisponibles = []; //creo array para guardar los turnos disponibles
+    let hora = fechaInicio;
+    while (hora <= fechaFin) {
+      // verificar si la hora está disponible
+      const horaFin = new Date(hora.getTime() + duracion * 60000);
+      const disponible = await this.turnoRepository.count({
+        where: [
+          {
+            turno_fecha: LessThanOrEqual(horaFin),
+            turno_fecha_fin: MoreThanOrEqual(hora),
+          },
+          {
+            turno_fecha: LessThan(hora),
+            turno_fecha_fin: MoreThan(horaFin),
+          },
+        ],
+      });
+
+      if (disponible == 0) {
+        horariosDisponibles.push(new Date(hora));
+      }
+      // avanzar a la siguiente hora
+      hora = new Date(hora.getTime() + 15 * 60000); // avanzar en bloques de 15 minutos
+    }
+    return horariosDisponibles;
   }
 
 
