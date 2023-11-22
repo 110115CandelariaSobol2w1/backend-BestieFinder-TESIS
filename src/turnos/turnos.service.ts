@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTurnoDto } from './dto/create-turno.dto';
 import { UpdateTurnoDto } from './dto/update-turno.dto';
+import { turnosRepository } from './turnos.repository';
 
 @Injectable()
 export class TurnosService {
-  create(createTurnoDto: CreateTurnoDto) {
-    return 'This action adds a new turno';
+
+  constructor(private readonly turnoRepository: turnosRepository){}
+
+  async create(createTurnoDto: CreateTurnoDto) {
+    return await this.turnoRepository.nuevoTurno(createTurnoDto) ;
   }
 
   findAll() {

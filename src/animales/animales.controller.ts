@@ -19,6 +19,12 @@ export class AnimalesController {
     return this.animalesService.findAll();
   }
 
+  @UseGuards(AuthGuard)
+  @Get('/misMascotas')
+  findMisMascotas(@Request() req) {
+    return this.animalesService.findMisMascotas(req);
+  }
+
   @Get('/adopcion')
   animalesAdopcion() {
     return this.animalesService.getanimalesAdopcion();
@@ -52,5 +58,7 @@ export class AnimalesController {
   updateAnimalPerdidoEncontrado(@Param('id') id:number,@Request() req){
     return this.animalesService.updateAnimalPerdidoEncontrado(id,req)
   }
+
+
   
 }

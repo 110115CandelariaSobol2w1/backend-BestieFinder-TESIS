@@ -38,4 +38,8 @@ export class AnimalesService {
   async getanimalesAdopcion(){
     return await this.animalesRepository.getanimalesAdopcion();
   }
+
+  async findMisMascotas(req){
+    return await this.animalesRepository.findMisMascotas(req);
+  }
 }

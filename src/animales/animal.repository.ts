@@ -239,5 +239,34 @@ export class animalRepository {
       });
     }
   }
+
+  async findMisMascotas(req){
+    
+    try {
+      const { userId } = req.user;
+  
+      console.log(userId)
+      console.log('hola')
+      const animales = await this.animalRepository.find({
+        where: {
+          user_id: userId,
+        },
+      });
+
+      return {
+        message: 'Mis Mascotas',
+        statusCode: HttpStatus.OK,
+        data: animales,
+      };
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: [`${error.message}`],
+        error: 'Error Interno del Servidor',
+      });
+    }
+
+
+  }
   
 }

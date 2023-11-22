@@ -29,8 +29,12 @@ export class Turno {
   @IsNumber()
   refugio_id: number
 
+  @Column()
+  @IsDateString()
+  turno_fecha_fin: Date;
+
   @ManyToOne(() => EstadoTurno, (estadoTurno) => estadoTurno.animales)
-  @JoinColumn({ name: 'estado_turno' })
+  @JoinColumn({ name: 'turno_estado' })
   estado: EstadoTurno;
 
   @ManyToOne(() => User, (usuario) => usuario.turnos)
