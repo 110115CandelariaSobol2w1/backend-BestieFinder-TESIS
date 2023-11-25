@@ -14,6 +14,7 @@ import { EventosModule } from './eventos/eventos.module';
 import { PublicacionesModule } from './publicaciones/publicaciones.module';
 import { TurnosModule } from './turnos/turnos.module';
 import { EstadoTurnosModule } from './estado_turnos/estado_turnos.module';
+import { DonacionesModule } from './donaciones/donaciones.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { EstadoTurnosModule } from './estado_turnos/estado_turnos.module';
     PublicacionesModule,
     TurnosModule,
     EstadoTurnosModule,
+    DonacionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

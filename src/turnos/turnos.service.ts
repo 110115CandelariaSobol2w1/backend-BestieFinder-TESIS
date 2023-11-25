@@ -16,8 +16,8 @@ export class TurnosService {
     return await this.turnoRepository.getHorariosDisponibles(turnosDisponibles);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} turno`;
+  async findOne(req) {
+    return await this.turnoRepository.getTurnosPorUsuario(req);
   }
 
   remove(id: number) {

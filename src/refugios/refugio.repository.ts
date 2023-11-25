@@ -109,7 +109,7 @@ export class refugioRepository {
 
   async findRefugiosCastraciones(){
     try {
-      const refugios = await this.refugioRepository.findOne({
+      const refugios = await this.refugioRepository.find({
         where: {
           refugio_castraciones: true,
         },

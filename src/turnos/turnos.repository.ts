@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, HttpStatus, Injectable } from "@nestjs/common";
 import { Turno } from "./entities/turno.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from "typeorm";
@@ -95,7 +95,10 @@ export class turnosRepository {
 
         await this.turnoRepository.save(registrandoTurno);
 
-        return 'registrando turno';
+        return {
+          message: 'Turno registrado',
+          statusCode: HttpStatus.CREATED,
+        };
 
       } else {
         return 'No hay lugar en las fechas solicitadas';
@@ -150,11 +153,33 @@ export class turnosRepository {
       // avanzar a la siguiente hora
       hora = new Date(hora.getTime() + 15 * 60000); // avanzar en bloques de 15 minutos
     }
-    return horariosDisponibles;
+    return {
+      message: 'Turnos',
+      statusCode: HttpStatus.OK,
+      data: horariosDisponibles,
+    };
   }
 
-
-
-
-
+  async getTurnosPorUsuario(req){
+    try {
+      const { userId } = req.user;
+      const turnos = await this.turnoRepository.find({
+        where: {
+          user_id: userId
+        }
+      });
+      return {
+        message: 'Turnos',
+        statusCode: HttpStatus.OK,
+        data: turnos,
+      };
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `${error.code} ${error.detail}`,
+        error: 'Error Interno del Servidor',
+      });
+    }
+  }
+  
 }
