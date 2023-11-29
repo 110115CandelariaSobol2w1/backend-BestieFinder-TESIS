@@ -1,39 +1,32 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, All, HttpStatus, Get, Query, Request, UseGuards } from '@nestjs/common';
 import * as mercadopago from 'mercadopago';
+import { DonacionesService } from './donaciones.service';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('payments')
 export class DonacionesController {
 
-  constructor() {
-    mercadopago.configure({
-      access_token: 'TEST-5953748682713128-112422-56c14b4ad548e06ae4cac11fcd47ddcf-1564168314' // Reemplaza con tu token de acceso real
-    });
+  constructor(private readonly donacionesService: DonacionesService) {}
+
+  @UseGuards(AuthGuard)
+  @Post('create')
+  async createOrder(@Body() paymentData: any, @Request() req) {
+    const result = await this.donacionesService.createOrder(paymentData, req);
+    return result;
   }
 
-  @Post('create')
-  async createPayment(@Body() paymentData: any) {
+  @Post('webhook')
+  async receiveWebhook(@Body() data: any, @Query() queryParams: any) {
+    console.log("Received webhook data:", data); // Verificar los datos recibidos
     try {
-      const preference = {
-        items: [
-          {
-            title: paymentData.description || 'Descripción del pago',
-            unit_price: parseFloat(paymentData.transaction_amount) || 100,
-            quantity: 1
-          }
-        ],
-        payer: {
-          email: paymentData.email || 'email@example.com' // Email del pagador
-        }
-        // Puedes añadir más información según la documentación de Mercado Pago
-      };
-
-      const response = await mercadopago.preferences.create(preference);
-
-      return response; // Devuelve la respuesta de la creación del pago
-
+      await this.donacionesService.receiveWebhook(data, queryParams);
+      console.log("Webhook processing completed"); // Confirmar que el procesamiento se completó
+      return HttpStatus.OK;
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error("Error processing webhook:", error); // Registrar cualquier error que pueda ocurrir
+      throw new Error('Error processing webhook');
     }
   }
+  
 }
+
