@@ -34,6 +34,11 @@ export class UsuariosRefugiosController {
     return this.usuariosRefugiosService.cancelarUsuarioRefugio(id,req);
   }
 
+  @Get('solicitudes')
+  getSolicitudes(@Request() req){
+    return this.usuariosRefugiosService.getSolicitudes(req);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUsuariosRefugioDto: UpdateUsuariosRefugioDto) {
     return this.usuariosRefugiosService.update(+id, updateUsuariosRefugioDto);

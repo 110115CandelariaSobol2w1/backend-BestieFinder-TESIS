@@ -96,7 +96,7 @@ export class userRefugiosRepository {
         return 'No puede aceptar miembros de otro refugio';
       }
 
-      if (userRefugio.ref_user_confirmado === false) {
+      if (userRefugio.ref_user_confirmado === null) {
         userRefugio.ref_user_confirmado = true;
         await this.userRefugioRepository.save(userRefugio);
       }
@@ -138,7 +138,7 @@ export class userRefugiosRepository {
         return 'No puede aceptar miembros de otro refugio';
       }
 
-      if (userRefugio.ref_user_confirmado === false) {
+      if (userRefugio.ref_user_confirmado === null) {
         userRefugio.ref_user_confirmado = false;
         await this.userRefugioRepository.save(userRefugio);
       }
@@ -153,6 +153,36 @@ export class userRefugiosRepository {
         error: error.message,
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       });
+    }
+  }
+
+  async getsolicitudes(req){
+    const { userId } = req.user;
+
+    try {
+      const userOwner = await this.userRefugioRepository.findOne({
+        where: {
+          user_id: userId,
+        },
+      });
+
+      if (userOwner.ref_user_owner === false) {
+        return 'No tenes permisos para confirmar un usuario en el refugio';
+      }
+
+      const solicitudes = await this.userRefugioRepository.find({
+        where: {
+          refugio_id: userOwner.refugio_id,
+          ref_user_confirmado: null
+        }
+      });
+
+      return {
+        message: 'Solicitudes pendientes',
+        data: solicitudes,
+      };
+    } catch (error) {
+      
     }
   }
 

@@ -141,7 +141,7 @@ export class refugioRepository {
         refugio_id: refugio,
         user_id: userId,
         ref_user_owner: true,
-        ref_user_confirmado: true
+        ref_user_confirmado: null
       });
       await this.userRefugioRepository.save(newUserRefugio);
 
@@ -153,6 +153,34 @@ export class refugioRepository {
       throw new BadRequestException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         message: error.message,
+        error: 'Error Interno del Servidor',
+      });
+    }
+  }
+
+  async getRefugio(req){
+    try {
+      const { userId } = req.user;
+      const userRefugio = await this.userRefugioRepository.findOne({
+        where: {
+          user_id: userId
+        }
+      });
+
+      const refugio = await this.refugioRepository.findOne({
+        where: {
+          refugio_id: userRefugio.refugio_id
+        }
+      })
+      return {
+        message: 'Turnos',
+        statusCode: HttpStatus.OK,
+        data: refugio,
+      };
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `${error.code} ${error.detail}`,
         error: 'Error Interno del Servidor',
       });
     }

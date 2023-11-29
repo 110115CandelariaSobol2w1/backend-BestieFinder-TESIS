@@ -24,6 +24,10 @@ export class UsuariosRefugiosService {
     return await this.userRefugioRepository.cancelarUsuarioRefugio(id,req);
   }
 
+  async getSolicitudes(req){
+    return await this.getSolicitudes(req);
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} usuariosRefugio`;
   }

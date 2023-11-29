@@ -40,6 +40,11 @@ export class RefugiosController {
     return this.refugiosService.updateRefugio(id, updateRefugioDto);
   }
 
+  @Get('refugio')
+  getRefugio(@Request() req) {
+    return this.refugiosService.getRefugio(req);
+  }
+
 
 
 }

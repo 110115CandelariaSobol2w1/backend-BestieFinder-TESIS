@@ -34,4 +34,8 @@ export class RefugiosService {
     return await this.refugiosRepository.createRefugioAndUser(createData,req)
   }
 
+  async getRefugio(req){
+    return await this.refugiosRepository.getRefugio(req)
+  }
+
 }
