@@ -5,6 +5,7 @@ import { LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from
 import { Animal } from "src/animales/entities/animal.entity";
 import { CreateTurnoDto } from "./dto/create-turno.dto";
 import { turnosDisponiblesDto } from "./dto/turnos-disponibles.dto";
+import { UsuariosRefugio } from "src/usuarios_refugios/entities/usuarios_refugio.entity";
 
 @Injectable()
 export class turnosRepository {
@@ -12,7 +13,9 @@ export class turnosRepository {
     @InjectRepository(Turno)
     private turnoRepository: Repository<Turno>,
     @InjectRepository(Animal)
-    private animalRepository: Repository<Animal>
+    private animalRepository: Repository<Animal>,
+    @InjectRepository(UsuariosRefugio)
+    private usuarioRefugioRepository: Repository<UsuariosRefugio>
   ) {}
 
   async nuevoTurno(createTurnoDto: CreateTurnoDto, req){
@@ -172,6 +175,35 @@ export class turnosRepository {
         message: 'Turnos',
         statusCode: HttpStatus.OK,
         data: turnos,
+      };
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `${error.code} ${error.detail}`,
+        error: 'Error Interno del Servidor',
+      });
+    }
+  }
+
+  async getTurnosPorRefugio(req){
+    try {
+      const { userId } = req.user;
+      const usuarioRefugio = await this.usuarioRefugioRepository.findOne({
+        where: {
+          user_id: userId
+        }
+      });
+
+      const turnosRefugio = await this.turnoRepository.find({
+        where: {
+          refugio_id: usuarioRefugio.refugio_id
+        }
+      })
+
+      return {
+        message: 'Turnos',
+        statusCode: HttpStatus.OK,
+        data: turnosRefugio,
       };
     } catch (error) {
       throw new BadRequestException({

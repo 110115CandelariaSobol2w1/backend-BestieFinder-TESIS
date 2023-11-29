@@ -26,6 +26,12 @@ export class TurnosController {
     return this.turnosService.findOne(req);
   }
 
+  @UseGuards(AuthGuard)
+  @Get('refugio')
+  findTurnosRefugio(@Request() req) {
+    return this.turnosService.findTurnosRefugio(req);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.turnosService.remove(+id);

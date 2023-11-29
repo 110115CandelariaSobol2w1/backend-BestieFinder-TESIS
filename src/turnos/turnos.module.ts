@@ -7,9 +7,10 @@ import { turnosRepository } from './turnos.repository';
 import { Animal } from 'src/animales/entities/animal.entity';
 import { AnimalesService } from 'src/animales/animales.service';
 import { animalRepository } from 'src/animales/animal.repository';
+import { UsuariosRefugio } from 'src/usuarios_refugios/entities/usuarios_refugio.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Turno, Animal])],
+  imports: [TypeOrmModule.forFeature([Turno, Animal, UsuariosRefugio])],
   controllers: [TurnosController],
   providers: [TurnosService, turnosRepository, AnimalesService, animalRepository],
 })

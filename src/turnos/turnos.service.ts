@@ -20,6 +20,10 @@ export class TurnosService {
     return await this.turnoRepository.getTurnosPorUsuario(req);
   }
 
+  async findTurnosRefugio(req) {
+    return await this.turnoRepository.getTurnosPorRefugio(req);
+  }
+
   remove(id: number) {
     return `This action removes a #${id} turno`;
   }
