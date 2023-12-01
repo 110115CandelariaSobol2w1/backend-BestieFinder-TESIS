@@ -1,5 +1,6 @@
 import { IsBase64, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 import { Animal } from "src/animales/entities/animal.entity";
+import { Donacion } from "src/donaciones/entities/donacion.entity";
 import { Turno } from "src/turnos/entities/turno.entity";
 import { UsuariosRefugio } from "src/usuarios_refugios/entities/usuarios_refugio.entity";
 import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -51,6 +52,9 @@ export class User {
 
   @OneToMany(() => Turno, (turno) => turno.usuario)
   turnos: Turno[];
+
+  @OneToMany(() => Donacion, donacion => donacion.usuario)
+  donaciones: Donacion[];
 
 
 }

@@ -25,7 +25,11 @@ export class UsuariosRefugiosService {
   }
 
   async getSolicitudes(req){
-    return await this.getSolicitudes(req);
+    return await this.userRefugioRepository.getsolicitudes(req);
+  }
+
+  async isOwner(req){
+    return await this.userRefugioRepository.isOwner(req);
   }
 
   findOne(id: number) {

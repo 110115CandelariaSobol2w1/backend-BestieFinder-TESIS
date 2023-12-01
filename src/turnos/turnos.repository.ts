@@ -197,6 +197,9 @@ export class turnosRepository {
       const turnosRefugio = await this.turnoRepository.find({
         where: {
           refugio_id: usuarioRefugio.refugio_id
+        },
+        relations: {
+          usuario: true
         }
       })
 

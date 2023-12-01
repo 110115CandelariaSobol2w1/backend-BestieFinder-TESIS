@@ -1,5 +1,5 @@
 // donation.service.ts
-import { HttpStatus, Injectable, Query, UseGuards } from '@nestjs/common';
+import { HttpStatus, Injectable, InternalServerErrorException, Query, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Donacion } from './entities/donacion.entity';
@@ -7,6 +7,7 @@ import { CreateDonacionDto } from './dto/create-donacion.dto';
 import * as mercadopago from 'mercadopago';
 import { Refugio } from 'src/refugios/entities/refugio.entity';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { UsuariosRefugio } from 'src/usuarios_refugios/entities/usuarios_refugio.entity';
 
 @Injectable()
 export class DonacionesService {
@@ -14,6 +15,8 @@ export class DonacionesService {
     @InjectRepository(Refugio) private refugioRepository: Repository<Refugio>,
     @InjectRepository(Donacion)
     private donacionRepository: Repository<Donacion>,
+    @InjectRepository(UsuariosRefugio)
+    private userRefugioRepository: Repository<UsuariosRefugio>
   ) {
     mercadopago.configure({
       access_token:
@@ -35,7 +38,7 @@ export class DonacionesService {
     console.log(nombreRefugio);
 
     try {
-      const notificationURL = `https://d671-2800-2131-7540-c9b-80e-eccf-5f5a-10f5.ngrok-free.app/payments/webhook?userId=${userId}&refugioId=${refugio}`;
+      const notificationURL = `https://246a-190-16-41-81.ngrok-free.app/payments/webhook?userId=${userId}&refugioId=${refugio}`;
       const preference = {
         items: [
           {
@@ -88,6 +91,43 @@ export class DonacionesService {
     } catch (error) {
       console.error(error);
       throw new Error('Something went wrong');
+    }
+  }
+
+  async getDonacionesRefugio(req){
+    const { userId } = req.user;
+
+    try {
+      const userOwner = await this.userRefugioRepository.findOne({
+        where: {
+          user_id: userId,
+        },
+      });
+
+      if (userOwner.ref_user_owner === false) {
+        return 'No tenes permisos para confirmar un usuario en el refugio';
+      }
+
+      const donaciones = await this.donacionRepository.find({
+        where: {
+          refugio_id: userOwner.refugio_id
+        },
+        relations: {
+          usuario: true
+        }
+      });
+
+      return {
+        message: 'Donaciones',
+        statusCode: HttpStatus.OK,
+        data: donaciones,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'Error Interno del Servidor',
+        error: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
     }
   }
 }

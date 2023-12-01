@@ -8,6 +8,12 @@ import { AuthGuard } from 'src/auth/guard/auth.guard';
 export class RefugiosController {
   constructor(private readonly refugiosService: RefugiosService) {}
 
+  @UseGuards(AuthGuard)
+  @Get('refugio')
+  getRefugio(@Request() req) {
+    return this.refugiosService.getRefugio(req);
+  }
+
   @Post()
   create(@Body() createRefugioDto: CreateRefugioDto) {
     return this.refugiosService.createRefugio(createRefugioDto);
@@ -39,12 +45,5 @@ export class RefugiosController {
   update(@Param('id') id: number, @Body() updateRefugioDto: UpdateRefugioDto) {
     return this.refugiosService.updateRefugio(id, updateRefugioDto);
   }
-
-  @Get('refugio')
-  getRefugio(@Request() req) {
-    return this.refugiosService.getRefugio(req);
-  }
-
-
 
 }

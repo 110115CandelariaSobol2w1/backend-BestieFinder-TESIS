@@ -27,6 +27,12 @@ export class DonacionesController {
       throw new Error('Error processing webhook');
     }
   }
+
+  @UseGuards(AuthGuard)
+  @Get('/refugio')
+  async getDonacionesRefugio(@Request() req){
+    return this.donacionesService.getDonacionesRefugio(req);
+  }
   
 }
 

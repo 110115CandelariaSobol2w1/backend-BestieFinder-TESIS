@@ -9,9 +9,21 @@ export class UsuariosRefugiosController {
   constructor(private readonly usuariosRefugiosService: UsuariosRefugiosService) {}
 
   @UseGuards(AuthGuard)
+  @Get('solicitudes')
+  getSolicitudes(@Request() req){
+    return this.usuariosRefugiosService.getSolicitudes(req);
+  }
+  
+  @UseGuards(AuthGuard)
   @Post()
   create(@Body() createUsuariosRefugioDto: CreateUsuariosRefugioDto, @Request() req) {
     return this.usuariosRefugiosService.create(createUsuariosRefugioDto, req);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('owner')
+  isOwner(@Request() req){
+    return this.usuariosRefugiosService.isOwner(req);
   }
 
   @Get(':id')
@@ -24,19 +36,16 @@ export class UsuariosRefugiosController {
     return this.usuariosRefugiosService.findOne(+id);
   }
 
-  @Post('confirmar/:id')
+  @UseGuards(AuthGuard)
+  @Patch('confirmar/:id')
   confirmarUsuario(@Param('id') id:number, @Request() req){
     return this.usuariosRefugiosService.confirmarUsuarioRefugio(id,req);
   }
 
-  @Post('cancelar/:id')
+  @UseGuards(AuthGuard)
+  @Patch('cancelar/:id')
   cancelarUsuario(@Param('id') id:number, @Request() req){
     return this.usuariosRefugiosService.cancelarUsuarioRefugio(id,req);
-  }
-
-  @Get('solicitudes')
-  getSolicitudes(@Request() req){
-    return this.usuariosRefugiosService.getSolicitudes(req);
   }
 
   @Patch(':id')

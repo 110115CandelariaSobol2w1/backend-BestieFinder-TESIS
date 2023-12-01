@@ -1,5 +1,6 @@
 import { IsDate, IsDecimal, IsNotEmpty, IsNumber } from "class-validator";
-import { Column, Decimal128, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Column, Decimal128, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('donaciones')
 export class Donacion {
@@ -26,7 +27,8 @@ export class Donacion {
   @IsNumber()
   refugio_id :number
 
-
-
+  @ManyToOne(() => User, user => user.donaciones)
+  @JoinColumn({ name: 'user_id' })
+  usuario: User;
 
 }
