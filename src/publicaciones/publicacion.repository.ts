@@ -6,6 +6,7 @@ import { CreateAnimaleDto } from 'src/animales/dto/create-animale.dto';
 import { CreatePublicacioneDto } from './dto/create-publicacione.dto';
 import { Animal } from 'src/animales/entities/animal.entity';
 import { UpdatePublicacioneDto } from './dto/update-publicacione.dto';
+import { MatchPublicacionDto } from './dto/match-publicacion.dto';
 
 @Injectable()
 export class publicacionRepository {
@@ -859,6 +860,56 @@ export class publicacionRepository {
       });
     }
   }
+
+  async getPublicacionesMatch(matchPublicacion: MatchPublicacionDto) {
+    try {
+      const {animal_tipo, animal_raza, animal_sexo, animal_patio, animal_edad } = matchPublicacion;
+      const max_edad = animal_edad + 3;
+      const animal_estado = 4;
+  
+      let match = await this.publicacionRepository.createQueryBuilder('publicacion')
+        .select('animal')
+        // .addSelect('animal.animal_sexo', 'sexo')
+        // .addSelect('animal.animal_estado', 'estado')
+        // .addSelect('animal.animal_patio', 'patio')
+        // .addSelect('animal.animal_edad', 'edad')
+        .leftJoin('publicacion.animal', 'animal')
+        .where('animal.animal_estado = 4')
+        .andWhere('animal.animal_tipo = :animal_tipo', { animal_tipo })
+        .andWhere('animal.animal_sexo = :animal_sexo', { animal_sexo })
+        .andWhere('animal.animal_raza = :animal_raza', { animal_raza })
+        .andWhere('animal.animal_patio = :animal_patio', { animal_patio })
+        //.andWhere('animal.animal_edad BETWEEN :animal_edad AND :max_edad', { animal_edad,max_edad})
+        .getRawMany();
+
+        if(match.length === 0 ){
+          match = await this.publicacionRepository.createQueryBuilder('publicacion')
+          .select('animal.animal_raza', 'raza')
+          .addSelect('animal.animal_sexo', 'sexo')
+          .addSelect('animal.animal_estado', 'estado')
+          .addSelect('animal.animal_patio', 'patio')
+          .addSelect('animal.animal_edad', 'edad')
+          .leftJoin('publicacion.animal', 'animal')
+          .where('animal.animal_estado = 4')
+          .andWhere('animal.animal_tipo = :animal_tipo', { animal_tipo })
+          .andWhere('animal.animal_raza = :animal_raza', { animal_raza })
+          .getRawMany();
+        }
+  
+      return {
+        message: 'Posibles Match con el usuario',
+        statusCode: HttpStatus.OK,
+        data: match,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'Error Interno del Servidor',
+        error: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+  
   
 
 }

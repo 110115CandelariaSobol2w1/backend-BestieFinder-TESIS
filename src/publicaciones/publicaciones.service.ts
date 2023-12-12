@@ -4,6 +4,7 @@ import { UpdatePublicacioneDto } from './dto/update-publicacione.dto';
 import { publicacionRepository } from './publicacion.repository';
 import { CreateAnimaleDto } from 'src/animales/dto/create-animale.dto';
 import { start } from 'repl';
+import { MatchPublicacionDto } from './dto/match-publicacion.dto';
 
 @Injectable()
 export class PublicacionesService {
@@ -96,6 +97,10 @@ export class PublicacionesService {
 
   async getPublicacionesAgrupadasPorEstadoPorFecha(startDate: Date, endDate: Date){
     return await this.publicacionRepository.getPublicacionesAgrupadasPorEstadoPorFecha(startDate, endDate);
+  }
+
+  async getPublicacionesMatch(match: MatchPublicacionDto){
+    return await this.publicacionRepository.getPublicacionesMatch(match)
   }
 
   

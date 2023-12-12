@@ -5,6 +5,7 @@ import { UpdatePublicacioneDto } from './dto/update-publicacione.dto';
 import { CreateAnimalEstadoDto } from 'src/animal_estado/dto/create-animal_estado.dto';
 import { CreateAnimaleDto } from 'src/animales/dto/create-animale.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { MatchPublicacionDto } from './dto/match-publicacion.dto';
 
 @Controller('publicaciones')
 export class PublicacionesController {
@@ -105,6 +106,11 @@ export class PublicacionesController {
   @Patch(':id')
   update(@Param('id') id: number, @Body() updatePublicacioneDto: UpdatePublicacioneDto, @Request() req) {
     return this.publicacionesService.update(id, updatePublicacioneDto, req);
+  }
+
+  @Get('match')
+  getPublicacionesMatch(@Body() match: MatchPublicacionDto) {
+    return this.publicacionesService.getPublicacionesMatch(match);
   }
 
   @UseGuards(AuthGuard)
