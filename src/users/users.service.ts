@@ -16,6 +16,10 @@ export class UsersService {
     return this.userRepository.getUserById(req)
   }
 
+  async getUserMascotaById(id:number){
+    return this.userRepository.getUserMascotaById(id)
+  }
+
   async updateUser(updateUserDto: UpdateUserDto, req){
     return this.userRepository.updateUser(updateUserDto,req)
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, Req } from '@nestjs/common';
 import { UsuariosRefugiosService } from './usuarios_refugios.service';
 import { CreateUsuariosRefugioDto } from './dto/create-usuarios_refugio.dto';
 import { UpdateUsuariosRefugioDto } from './dto/update-usuarios_refugio.dto';
@@ -21,19 +21,26 @@ export class UsuariosRefugiosController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('/voluntario')
+  perteneceRefugio(@Request() req){
+    return this.usuariosRefugiosService.perteneceRefugio(req);
+  }
+
+  @UseGuards(AuthGuard)
   @Get('owner')
   isOwner(@Request() req){
     return this.usuariosRefugiosService.isOwner(req);
   }
 
-  @Get(':id')
-  findAll(@Param('id') id: number) {
-    return this.usuariosRefugiosService.findAll(id);
+  @UseGuards(AuthGuard)
+  @Get()
+  getUserAndRefugio(@Request() req){
+    return this.usuariosRefugiosService.getUserAndRefugio(req);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usuariosRefugiosService.findOne(+id);
+  findAll(@Param('id') id: number) {
+    return this.usuariosRefugiosService.findAll(id);
   }
 
   @UseGuards(AuthGuard)
@@ -48,13 +55,4 @@ export class UsuariosRefugiosController {
     return this.usuariosRefugiosService.cancelarUsuarioRefugio(id,req);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUsuariosRefugioDto: UpdateUsuariosRefugioDto) {
-    return this.usuariosRefugiosService.update(+id, updateUsuariosRefugioDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usuariosRefugiosService.remove(+id);
-  }
 }

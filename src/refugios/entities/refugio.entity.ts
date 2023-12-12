@@ -1,4 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBase64, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Donacion } from 'src/donaciones/entities/donacion.entity';
 import { Evento } from 'src/eventos/entities/evento.entity';
 import { RedSocial } from 'src/redes_sociales/entities/redes_sociale.entity';
 import { Turno } from 'src/turnos/entities/turno.entity';
@@ -46,6 +47,12 @@ export class Refugio {
   @IsBoolean()
   refugio_castraciones: Boolean;
 
+  @Column({name: 'refugio_photo'})
+  @IsString()
+  @IsBase64()
+  @IsOptional()
+  refugio_photo:string
+
   @OneToMany(() => RedSocial, (redSocial) => redSocial.refugio)
   redesSociales: RedSocial[];
 
@@ -58,4 +65,7 @@ export class Refugio {
 
   @OneToMany(() => Turno, (turno) => turno.refugio)
   turnos: Turno[];
+
+  @OneToMany(() => Donacion, donacion => donacion.refugio)
+  donaciones: Donacion[];
 }

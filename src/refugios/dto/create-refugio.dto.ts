@@ -1,4 +1,4 @@
-import { IsBoolean, IsString } from "class-validator";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 
 export class CreateRefugioDto {
     
@@ -22,4 +22,8 @@ export class CreateRefugioDto {
   
   @IsBoolean()
   refugio_castraciones: boolean;
+
+  @IsString()
+  @IsOptional()
+  photo: string;
 }

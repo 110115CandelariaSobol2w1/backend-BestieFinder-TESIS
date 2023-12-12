@@ -19,6 +19,11 @@ export class UsersController {
     return this.usersService.getUserById(req);
   }
 
+  @Get(':id')
+  getUserMascotaById(@Param('id') id:number) {
+    return this.usersService.getUserMascotaById(id);
+  }
+
   @UseGuards(AuthGuard)
   @Patch('id')
   updateUser(@Body() updateUserDto: UpdateUserDto, @Request() req){

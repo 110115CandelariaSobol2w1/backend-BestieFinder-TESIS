@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Publicacion } from './entities/publicacione.entity';
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateAnimaleDto } from 'src/animales/dto/create-animale.dto';
 import { CreatePublicacioneDto } from './dto/create-publicacione.dto';
@@ -172,6 +172,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 1')
@@ -214,6 +215,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 2')
@@ -256,6 +258,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 3')
@@ -298,6 +301,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 4')
@@ -340,6 +344,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 1')
@@ -382,6 +387,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 2')
@@ -424,6 +430,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 3')
@@ -466,6 +473,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 4')
@@ -508,6 +516,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 1')
@@ -550,6 +559,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 2')
@@ -592,6 +602,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 3')
@@ -634,6 +645,7 @@ export class publicacionRepository {
           'animal.animal_patio',
           'animal.animal_estado',
           'animal.animal_tipo',
+          'animal.user_id'
         ])
         .innerJoin('publicacion.animal', 'animal')
         .where('animal.animal_tipo = 4')
@@ -729,5 +741,124 @@ export class publicacionRepository {
       });
     }
   }
+
+  async getPublicacionesAgrupadasPorTipo() {
+    try {
+      const publicacionesAgrupadas = await this.publicacionRepository.createQueryBuilder('publicacion')
+        .select('animalTipo.tipo_nombre', 'tipo_animal')
+        .addSelect('COUNT(*)', 'total_publicaciones')
+        .leftJoin('publicacion.animal', 'animal')
+        .leftJoin('animal.tipo', 'animalTipo')
+        .groupBy('animalTipo.tipo_nombre')
+        .getRawMany();
+  
+      return {
+        message: 'Publicaciones agrupadas por tipo de animal',
+        statusCode: HttpStatus.OK,
+        data: publicacionesAgrupadas,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'Error Interno del Servidor',
+        error: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+
+  async getPublicacionesAgrupadasPorTipoPorFecha(startDate: Date, endDate: Date) {
+    try {
+
+      const startDateWithoutTime = new Date(startDate);
+      startDateWithoutTime.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00
+  
+      const endDateWithoutTime = new Date(endDate);
+      endDateWithoutTime.setHours(23, 59, 59, 999);
+
+      const publicacionesAgrupadas = await this.publicacionRepository.createQueryBuilder('publicacion')
+        .select('animalTipo.tipo_nombre', 'tipo_animal')
+        .addSelect('COUNT(*)', 'total_publicaciones')
+        .leftJoin('publicacion.animal', 'animal')
+        .leftJoin('animal.tipo', 'animalTipo')
+        .where('publicacion.publicacion_fecha BETWEEN :startDate AND :endDate', {
+          startDate: startDateWithoutTime.toISOString(),
+          endDate: endDateWithoutTime.toISOString(),
+        })
+        .groupBy('animalTipo.tipo_nombre')
+        .getRawMany();
+  
+      return {
+        message: 'Publicaciones agrupadas por tipo de animal',
+        statusCode: HttpStatus.OK,
+        data: publicacionesAgrupadas,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'Error Interno del Servidor',
+        error: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+
+  async getPublicacionesAgrupadasPorEstado() {
+    try {
+      const publicacionesAgrupadas = await this.publicacionRepository.createQueryBuilder('publicacion')
+        .select('animalEstado.estado_nombre', 'estado_animal')
+        .addSelect('COUNT(*)', 'total_publicaciones')
+        .leftJoin('publicacion.animal', 'animal')
+        .leftJoin('animal.estado', 'animalEstado')
+        .groupBy('animalEstado.estado_nombre')
+        .getRawMany();
+  
+      return {
+        message: 'Publicaciones agrupadas por tipo de animal',
+        statusCode: HttpStatus.OK,
+        data: publicacionesAgrupadas,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'Error Interno del Servidor',
+        error: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+
+  async getPublicacionesAgrupadasPorEstadoPorFecha(startDate: Date, endDate: Date) {
+    try {
+
+      const startDateWithoutTime = new Date(startDate);
+      startDateWithoutTime.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00
+  
+      const endDateWithoutTime = new Date(endDate);
+      endDateWithoutTime.setHours(23, 59, 59, 999);
+
+      const publicacionesAgrupadas = await this.publicacionRepository.createQueryBuilder('publicacion')
+        .select('animalEstado.estado_nombre', 'estado_animal')
+        .addSelect('COUNT(*)', 'total_publicaciones')
+        .leftJoin('publicacion.animal', 'animal')
+        .leftJoin('animal.estado', 'animalEstado')
+        .where('publicacion.publicacion_fecha BETWEEN :startDate AND :endDate', {
+          startDate: startDateWithoutTime.toISOString(),
+          endDate: endDateWithoutTime.toISOString(),
+        })
+        .groupBy('animalEstado.estado_nombre')
+        .getRawMany();
+  
+      return {
+        message: 'Publicaciones agrupadas por tipo de animal',
+        statusCode: HttpStatus.OK,
+        data: publicacionesAgrupadas,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'Error Interno del Servidor',
+        error: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+  
 
 }

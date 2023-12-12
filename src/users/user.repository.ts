@@ -111,5 +111,28 @@ export class userRepository {
       });
     }
   }
+
+  async getUserMascotaById(id: number) {
+    try {
+        const user = await this.userRepository.findOne({
+          where: {
+            id: id,
+          },
+        })
+    
+        return {
+          message: 'Usuario',
+          statusCode: HttpStatus.OK,
+          data: user,
+        };
+      
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: [`${error.message}`],
+        error: 'Error Interno del Servidor',
+      });
+    }
+  }
   
 }

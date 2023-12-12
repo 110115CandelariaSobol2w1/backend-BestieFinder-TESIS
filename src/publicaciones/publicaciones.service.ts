@@ -3,6 +3,7 @@ import { CreatePublicacioneDto } from './dto/create-publicacione.dto';
 import { UpdatePublicacioneDto } from './dto/update-publicacione.dto';
 import { publicacionRepository } from './publicacion.repository';
 import { CreateAnimaleDto } from 'src/animales/dto/create-animale.dto';
+import { start } from 'repl';
 
 @Injectable()
 export class PublicacionesService {
@@ -80,4 +81,22 @@ export class PublicacionesService {
   async remove(id: number, req) {
     return await this.publicacionRepository.deletePublicacionAndAnimal(id, req)
   }
+
+  async getPublicacionesAgrupadasPorTipo(){
+    return await this.publicacionRepository.getPublicacionesAgrupadasPorTipo();
+  }
+
+  async getPublicacionesAgrupadasPorTipoPorFecha(startDate: Date, endDate: Date){
+    return await this.publicacionRepository.getPublicacionesAgrupadasPorTipoPorFecha(startDate, endDate);
+  }
+
+  async getPublicacionesAgrupadasPorEstado(){
+    return await this.publicacionRepository.getPublicacionesAgrupadasPorEstado();
+  }
+
+  async getPublicacionesAgrupadasPorEstadoPorFecha(startDate: Date, endDate: Date){
+    return await this.publicacionRepository.getPublicacionesAgrupadasPorEstadoPorFecha(startDate, endDate);
+  }
+
+  
 }

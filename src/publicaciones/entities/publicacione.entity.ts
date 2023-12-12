@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBase64, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Animal } from 'src/animales/entities/animal.entity';
 import {
   Column,
@@ -31,8 +31,9 @@ export class Publicacion {
   publicacion_photo: string;
 
   @Column()
-  @IsNotEmpty()
-  @IsNumber()
+  @IsString()
+  @IsBase64()
+  @IsOptional()
   animal_id: number;
 
   @ManyToOne(() => Animal, (animal) => animal.publicacion)

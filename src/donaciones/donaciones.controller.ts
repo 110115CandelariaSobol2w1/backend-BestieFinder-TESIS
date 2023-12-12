@@ -1,4 +1,4 @@
-import { Controller, Post, Body, All, HttpStatus, Get, Query, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, All, HttpStatus, Get, Query, Request, UseGuards, Param } from '@nestjs/common';
 import * as mercadopago from 'mercadopago';
 import { DonacionesService } from './donaciones.service';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
@@ -32,6 +32,16 @@ export class DonacionesController {
   @Get('/refugio')
   async getDonacionesRefugio(@Request() req){
     return this.donacionesService.getDonacionesRefugio(req);
+  }
+
+  @Get('donaciones/:startDate/:endDate')
+  async getDonacionesFecha(@Param('startDate') startDate:Date, @Param('endDate') endDate: Date){
+    return this.donacionesService.getDonacionesAgrupadasPorRefugioPorFecha(startDate,endDate);
+  }
+
+  @Get('donaciones')
+  async getDonaciones(){
+    return this.donacionesService.getDonacionesAgrupadasPorRefugio();
   }
   
 }

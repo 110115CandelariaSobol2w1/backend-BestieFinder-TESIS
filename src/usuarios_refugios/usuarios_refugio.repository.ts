@@ -214,6 +214,62 @@ export class userRefugiosRepository {
       });
     }
   }
+
+  async perteneceRefugio(req){
+    const { userId } = req.user;
+  
+    try {
+      const user = await this.userRefugioRepository.findOne({
+        where: {
+          user_id: userId
+        }
+      });
+
+      if(user){
+        return true
+      } 
+
+      return false
+
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: [`${error.message}`],
+        error: 'Error Interno del Servidor',
+      });
+    }
+  }
+
+  async getUserAndRefugio(req){
+    const { userId } = req.user;
+
+    console.log("hola")
+    try {
+      const userRefugio = await this.userRefugioRepository.findOne({
+        where: {
+          user_id: userId,
+          ref_user_owner: false
+        },
+        relations: {
+          refugio: true
+        }
+      });
+
+      console.log(userRefugio)
+
+      return {
+        message: 'Refugio del usuario',
+        data: userRefugio,
+      };
+
+    } catch (error) {
+      throw new BadRequestException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: [`${error.message}`],
+        error: 'Error Interno del Servidor',
+      });
+    }
+  }
   
 
 }

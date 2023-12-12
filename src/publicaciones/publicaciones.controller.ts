@@ -86,6 +86,16 @@ export class PublicacionesController {
     return this.publicacionesService.getAvesEncontradas();
   }
 
+  @Get('agrupadas')
+  publicacionesAgrupadas() {
+    return this.publicacionesService.getPublicacionesAgrupadasPorTipo();
+  }
+
+  @Get('agrupadas/estado')
+  publicacionesAgrupadasEstado() {
+    return this.publicacionesService.getPublicacionesAgrupadasPorEstado();
+  }
+
   @Get('encontrados/otros')
   getOtrosEncontrados() {
     return this.publicacionesService.getOtrosEncontrados();
@@ -101,5 +111,15 @@ export class PublicacionesController {
   @Delete(':id')
   remove(@Param('id') id: number, @Request() req) {
     return this.publicacionesService.remove(id,req);
+  }
+
+  @Get('agrupadas/:startDate/:endDate')
+  async getDonacionesFecha(@Param('startDate') startDate:Date, @Param('endDate') endDate: Date){
+    return this.publicacionesService.getPublicacionesAgrupadasPorTipoPorFecha(startDate,endDate);
+  }
+
+  @Get('agrupadas/estado/:startDate/:endDate')
+  publicacionesAgrupadasEstadoPorFecha(@Param('startDate') startDate:Date, @Param('endDate') endDate: Date) {
+    return this.publicacionesService.getPublicacionesAgrupadasPorEstadoPorFecha(startDate,endDate);
   }
 }

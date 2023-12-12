@@ -8,39 +8,44 @@ export class UsuariosRefugiosService {
 
   constructor(private readonly userRefugioRepository: userRefugiosRepository){}
 
+  //si
   async create(createUsuariosRefugioDto: CreateUsuariosRefugioDto, req) {
     return await this.userRefugioRepository.createUserRefugio(createUsuariosRefugioDto, req);
   }
 
+  //si
   async findAll(id: number) {
     return await this.userRefugioRepository.getUserByRefugio(id);
   }
 
+  //si
   async confirmarUsuarioRefugio(id: number, req){
     return await this.userRefugioRepository.confirmarUsuarioRefugio(id,req);
   }
 
+  //si
   async cancelarUsuarioRefugio(id:number, req){
     return await this.userRefugioRepository.cancelarUsuarioRefugio(id,req);
   }
 
+  //si
   async getSolicitudes(req){
     return await this.userRefugioRepository.getsolicitudes(req);
   }
 
+  //si
   async isOwner(req){
     return await this.userRefugioRepository.isOwner(req);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} usuariosRefugio`;
+  //si
+  async perteneceRefugio(req){
+    return await this.userRefugioRepository.perteneceRefugio(req);
   }
 
-  update(id: number, updateUsuariosRefugioDto: UpdateUsuariosRefugioDto) {
-    return `This action updates a #${id} usuariosRefugio`;
+  //si
+  async getUserAndRefugio(req){
+    return await this.userRefugioRepository.getUserAndRefugio(req);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usuariosRefugio`;
-  }
 }
